@@ -11,6 +11,17 @@ app.get("/", async (req, res) => {
 });
 
 
+const salt = bcrypt.genSaltSync(10);
+const hash = bcrypt.hashSync("generic", salt);
+console.log("---", hash);
+console.log(bcrypt.compareSync("generic",hash));
+// so now you can hash your password and compare your password to the hash
+
+
+// const myPlaintextPassword = "generic2";
+// const hash2 = bcrypt.hashSync(myPlaintextPassword, 5);
+// const result = bcrypt.compareSync(myPlaintextPassword+"d", hash2);
+// console.log(result); // true
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
