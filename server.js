@@ -1,15 +1,20 @@
 const bcrypt = require("bcrypt");
 const express = require("express");
 const app = express();
-const port = 3033;
-
-app.get("/", async (req, res) => {
+const port = process.env.PORT || 3033;
+app.use(express.json());
+app.post("/signup", async (req, res) => {
+  console.log(req.body);
   const salt = await bcrypt.genSaltSync(10);
-  const hash = await bcrypt.hashSync("generic", salt);
+  const hash = await bcrypt.hashSync(req.body.password, salt);
   console.log(salt, hash, "see above");
   res.send("Hello World! "+ salt +" " + hash,);
 });
 
+app.post("/login", async (req, res) => {
+  res.send("Hello World!");
+
+})
 
 const salt = bcrypt.genSaltSync(10);
 const hash = bcrypt.hashSync("generic", salt);
