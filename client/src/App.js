@@ -1,17 +1,17 @@
 import logo from './logo.svg';
-import {useEffect,useState} from "react"
+import {useEffect, useState} from "react";
 import './App.css';
 
 function App() {
-const [data, setData] = useState()
+  const [message, setMessage] = useState()
   useEffect(() => {
-    fetch("/backend")
-    .then(res=> res.json())
-    .then(res => {
-     console.log(res);
-      setData(res.express)
-    })
+    
   }, [])
+
+  const click = () => {
+    // console.log(352345235);
+    fetch("/data").then(res => res.json()).then(res => setMessage(res.data))
+  }
   
   return (
     <div className="App">
@@ -28,8 +28,8 @@ const [data, setData] = useState()
         >
           Learn React
         </a>
-        <button>get data from node</button>
-        <p>{!data ? "loading..." : data}</p>
+      <button onClick={click}>click here</button>
+      <p>{!message}</p>
       </header>
     </div>
   );
