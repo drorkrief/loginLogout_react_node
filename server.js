@@ -6,6 +6,10 @@ const port = process.env.PORT || 3033;
 app.use(express.json());
 const path = require("path");
 
+app.get("/backend", (req, res) => {
+  res.send({ express: "your EXPRESS backend connected to REACT" });
+});
+
 app.post("/signup", async (req, res) => {
   console.log(req.body);
   const salt = await bcrypt.genSaltSync(10);
