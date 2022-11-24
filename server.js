@@ -23,6 +23,10 @@ app.post("/signup", async (req, res) => {
   });
   res.send("Hello World! " + salt + " " + hash);
 });
+app.get("/data", (req, res) => {
+  res.send({ data: "Hello World!" });
+});
+
 // console.log("path: -> ", fs.readFile( path.join( __dirname ,"/files/hashes.txt")));
 app.post("/login", async (req, res) => {
   let currentHash = fs.readFileSync(path.join(__dirname, "/files/hashes.txt"), {
@@ -49,6 +53,7 @@ app.post("/login", async (req, res) => {
 // const hash2 = bcrypt.hashSync(myPlaintextPassword, 5);
 // const result = bcrypt.compareSync(myPlaintextPassword+"d", hash2);
 // console.log(result); // true
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

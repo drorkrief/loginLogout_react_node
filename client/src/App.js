@@ -22,6 +22,11 @@ function App() {
     console.log(nameRef.current?.value);
   
   }, [])
+
+  const click = () => {
+    // console.log(352345235);
+    fetch("/data").then(res => res.json()).then(res => setMessage(res.data))
+  }
   
   const handleSubmit = (event) => {
     event.preventDefault();
