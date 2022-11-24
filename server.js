@@ -6,7 +6,8 @@ const port = process.env.PORT || 3033;
 app.use(express.json());
 const path = require("path");
 
-app.get("/backend", (req, res) => {
+app.post("/backend", (req, res) => {
+  console.log(req.body);
   res.send({ express: "your EXPRESS backend connected to REACT" });
 });
 

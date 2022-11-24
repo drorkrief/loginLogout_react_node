@@ -1,11 +1,26 @@
-import logo from './logo.svg';
-import {useEffect, useState} from "react";
-import './App.css';
+import { useState, useRef, useEffect } from "react";
+import "./App.css";
+import axios from "axios";
 
 function App() {
-  const [message, setMessage] = useState()
+  const [data, setData] = useState();
+  const nameRef = useRef("");
+  const emailRef = useRef("");
+  const passwordRef = useRef("");
+  // const getData = () => {
+  //   console.log("sent");
+  //  axios.post("/backend",{
+  //   name:"dror",
+  //   email:"ddd@dd.dd",
+  //   password:"123"
+  //  }).then(res => {
+  //   console.log(res);
+  //  })
+  // };
+
   useEffect(() => {
-    
+    console.log(nameRef.current?.value);
+  
   }, [])
 
   const click = () => {
@@ -13,23 +28,48 @@ function App() {
     fetch("/data").then(res => res.json()).then(res => setMessage(res.data))
   }
   
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axios.post("/backend", {
+      name: nameRef.current?.value,
+      email: emailRef.current?.value,
+      password: passwordRef.current?.value
+    })
+    .then(response => {
+      console.log(response.data);
+    }, (error) => {
+      console.error(error);
+    })
+    
+    
+    console.log("submited");
+  };
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      <button onClick={click}>click here</button>
-      <p>{!message}</p>
+        <h1>login page:</h1>
+        <form onSubmit={handleSubmit}>
+          <fieldset>
+            <label>
+              <span>name: </span>
+              <input ref={nameRef} name="name" type={"text"}></input>
+            </label>
+            <br />
+            <label>
+              <span>E-mail: </span>
+              <input ref={emailRef} name="email" type={"email"}></input>
+            </label>
+            <br />
+            <label>
+              <span>password: </span>
+              <input ref={passwordRef} name="password" type={"password"}></input>
+            </label>
+          </fieldset>
+          <button type={"submit"}>Submit</button>
+        </form>
+
+        {/* <button onClick={getData}>get data from node</button>
+        <p>{!data ? " " : data}</p> */}
       </header>
     </div>
   );
