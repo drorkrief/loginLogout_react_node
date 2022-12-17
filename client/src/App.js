@@ -1,76 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import React,{useState} from "react";
 import "./App.css";
-import axios from "axios";
+import Login from "./Components/Login";
+import SignUp from "./Components/SignUp";
 
 function App() {
-  const [data, setData] = useState();
-  const nameRef = useRef("");
-  const emailRef = useRef("");
-  const passwordRef = useRef("");
-  // const getData = () => {
-  //   console.log("sent");
-  //  axios.post("/backend",{
-  //   name:"dror",
-  //   email:"ddd@dd.dd",
-  //   password:"123"
-  //  }).then(res => {
-  //   console.log(res);
-  //  })
-  // };
-
-  useEffect(() => {
-    console.log(nameRef.current?.value);
-  
-  }, [])
-
-  const click = () => {
-    // console.log(352345235);
-    fetch("/data").then(res => res.json()).then(res => setMessage(res.data))
-  }
-  
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    axios.post("/backend", {
-      name: nameRef.current?.value,
-      email: emailRef.current?.value,
-      password: passwordRef.current?.value
-    })
-    .then(response => {
-      console.log(response.data);
-    }, (error) => {
-      console.error(error);
-    })
-    
-    
-    console.log("submited");
-  };
+  const [login, setLogin] = useState()
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>login page:</h1>
-        <form onSubmit={handleSubmit}>
-          <fieldset>
-            <label>
-              <span>name: </span>
-              <input ref={nameRef} name="name" type={"text"}></input>
-            </label>
-            <br />
-            <label>
-              <span>E-mail: </span>
-              <input ref={emailRef} name="email" type={"email"}></input>
-            </label>
-            <br />
-            <label>
-              <span>password: </span>
-              <input ref={passwordRef} name="password" type={"password"}></input>
-            </label>
-          </fieldset>
-          <button type={"submit"}>Submit</button>
-        </form>
-
-        {/* <button onClick={getData}>get data from node</button>
-        <p>{!data ? " " : data}</p> */}
-      </header>
+      <div>
+      <button onClick={()=>setLogin("Login")}>Login</button>
+      <button onClick={()=>setLogin("signup")}>signup</button>
+      <button onClick={()=>setLogin("")}>logout</button>
+      </div>
+      {!login?null:login === "Login" ? <Login/>:<SignUp/>}
+     
     </div>
   );
 }
