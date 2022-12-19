@@ -2,32 +2,31 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 const app = express();
 const fs = require("fs");
-require('dotenv').config()
-
+require("dotenv").config();
+const log = require("./Modules/WrireToDB");
 const port = process.env.PORT || 3033;
 app.use(express.json());
 const path = require("path");
+const validator = require("email-validator");
 
-app.post("/backend", (req, res) => {
-  console.log(req.body, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-  console.log("validateEmail: " + validateEmail(req.body.email));
-
-  res.send({ express: "your EXPRESS backend connected to REACT" });
-});
-const validateEmail = (email) => {
-  return String(email)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-};
-app.post("/signup", async (req, res) => {
- 
-  if (req.body.name.lenght < 3 ||req.body.password.lenght < 6 || validateEmail(req.body.email)) {
-    console.log("validateEmail: " + validateEmail(req.body.email));
+app.post("/backend", log, (req, res) => {
+  console.log(req.body);
+  console.log(
+    `is ${req.body.email} valide? `,
+    validator.validate(req.body.email)
+  );
+  if (
+    !validator.validate(req.body.email) ||
+    req.body.name.length < 3 ||
+    req.body.password.length < 6
+  ) {
+    res.status(404).send("Not found");
+  } else {
+    res.send({ express: "your EXPRESS backend connected to REACT" });
   }
-  console.log("validateEmail: " + validateEmail(req.body.email));
+});
 
+app.post("/signup", async (req, res) => {
   console.log(req.body);
   const salt = await bcrypt.genSaltSync(10);
   const hash = await bcrypt.hashSync(req.body.password, salt);

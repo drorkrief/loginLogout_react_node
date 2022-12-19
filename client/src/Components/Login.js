@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 
 function Login() {
@@ -6,27 +6,7 @@ function Login() {
   const nameRef = useRef("");
   const emailRef = useRef("");
   const passwordRef = useRef("");
-  // const getData = () => {
-  //   console.log("sent");
-  //  axios.post("/backend",{
-  //   name:"dror",
-  //   email:"ddd@dd.dd",
-  //   password:"123"
-  //  }).then(res => {
-  //   console.log(res);
-  //  })
-  // };
-
-//   useEffect(() => {
-//     console.log(nameRef.current?.value);
-//   }, []);
-
-  const click = () => {
-    // console.log(352345235);
-    fetch("/data")
-      .then((res) => res.json())
-      .then((res) => setData(res.data));
-  };
+  const formRef = useRef();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -39,6 +19,7 @@ function Login() {
       .then(
         (response) => {
           console.log(response.data.express);
+          setData(response.data.express);
         },
         (error) => {
           console.error(error);
@@ -46,6 +27,7 @@ function Login() {
       );
 
     console.log("submited");
+    formRef.current.reset();
   };
 
   return (
@@ -53,7 +35,7 @@ function Login() {
       {" "}
       <header className="App-header">
         <h1>login page:</h1>
-        <form onSubmit={handleSubmit}>
+        <form ref={formRef} onSubmit={handleSubmit}>
           <fieldset>
             <label>
               <span>name: </span>
@@ -84,10 +66,8 @@ function Login() {
           </fieldset>
           <button type={"submit"}>Submit</button>
         </form>
-
-        {/* <button onClick={getData}>get data from node</button>
-    <p>{!data ? " " : data}</p> */}
       </header>
+      {data && <p>{data}</p>}
     </div>
   );
 }
