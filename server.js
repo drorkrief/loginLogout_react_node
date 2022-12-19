@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 const app = express();
 const fs = require("fs");
+require('dotenv').config()
+
 const port = process.env.PORT || 3033;
 app.use(express.json());
 const path = require("path");
