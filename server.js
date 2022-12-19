@@ -7,11 +7,25 @@ app.use(express.json());
 const path = require("path");
 
 app.post("/backend", (req, res) => {
-  console.log(req.body);
+  console.log(req.body, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  console.log("validateEmail: " + validateEmail(req.body.email));
+
   res.send({ express: "your EXPRESS backend connected to REACT" });
 });
-
+const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
 app.post("/signup", async (req, res) => {
+ 
+  if (req.body.name.lenght < 3 ||req.body.password.lenght < 6 || validateEmail(req.body.email)) {
+    console.log("validateEmail: " + validateEmail(req.body.email));
+  }
+  console.log("validateEmail: " + validateEmail(req.body.email));
+
   console.log(req.body);
   const salt = await bcrypt.genSaltSync(10);
   const hash = await bcrypt.hashSync(req.body.password, salt);
