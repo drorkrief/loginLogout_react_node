@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 const app = express();
 const fs = require("fs");
+const mongoose = require("mongoose")
+const User =require("./User")
 require("dotenv").config();
 const log = require("./Modules/WrireToDB");
 const port = process.env.PORT || 3033;
@@ -9,7 +11,16 @@ app.use(express.json());
 const path = require("path");
 const validator = require("email-validator");
 
-app.post("/backend", log, (req, res) => {
+mongoose.connect(
+  "mongodb://localhost/test",
+  () => {
+    console.log("connected");
+  },
+  (e) => console.error(e)
+);
+
+
+app.post("/backend", log, async (req, res) => {
   console.log(req.body);
   console.log(
     `is ${req.body.email} valide? `,
@@ -21,9 +32,17 @@ app.post("/backend", log, (req, res) => {
     req.body.password.length < 6
   ) {
     res.status(404).send("Not found");
-  } else {
-    res.send({ express: "your EXPRESS backend connected to REACT" });
   }
+  const salt = await bcrypt.genSaltSync(10);
+  const hash = await bcrypt.hashSync(req.body.password, salt);
+  const user = await User.create({
+    name: req.body.name,
+    email: req.body.email,
+    password:hash
+  });
+  await user.save();
+
+  res.send({ express: "your EXPRESS backend connected to REACT", hash });
 });
 
 app.post("/signup", async (req, res) => {
@@ -38,6 +57,8 @@ app.post("/signup", async (req, res) => {
   });
   res.send("Hello World! " + salt + " " + hash);
 });
+
+
 app.get("/data", (req, res) => {
   res.send({ data: "Hello World!" });
 });
