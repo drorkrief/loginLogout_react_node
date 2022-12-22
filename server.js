@@ -2,15 +2,16 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 const app = express();
 const fs = require("fs");
-const mongoose = require("mongoose")
-const User =require("./User")
+const mongoose = require("mongoose");
+const User = require("./User");
 require("dotenv").config();
 const log = require("./Modules/WrireToDB");
 const port = process.env.PORT || 3033;
 app.use(express.json());
 const path = require("path");
 const validator = require("email-validator");
-
+const emailsander = require("./emailVerificatin");
+mongoose.set("strictQuery", true);
 mongoose.connect(
   "mongodb://localhost/test",
   () => {
@@ -19,9 +20,9 @@ mongoose.connect(
   (e) => console.error(e)
 );
 
-
 app.post("/backend", log, async (req, res) => {
   console.log(req.body);
+  // emailsander.transporter()
   console.log(
     `is ${req.body.email} valide? `,
     validator.validate(req.body.email)
@@ -38,11 +39,14 @@ app.post("/backend", log, async (req, res) => {
   const user = await User.create({
     name: req.body.name,
     email: req.body.email,
-    password:hash
+    password: hash,
   });
   await user.save();
+  await emailsander.newfunction(req.body.email, hash);
 
-  res.send({ express: "your EXPRESS backend connected to REACT", hash });
+  res.send({
+    express: "your account will be active after email verification.",
+  });
 });
 
 app.post("/signup", async (req, res) => {
@@ -57,7 +61,6 @@ app.post("/signup", async (req, res) => {
   });
   res.send("Hello World! " + salt + " " + hash);
 });
-
 
 app.get("/data", (req, res) => {
   res.send({ data: "Hello World!" });
@@ -91,7 +94,7 @@ app.post("/login", async (req, res) => {
 // console.log(result); // true
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });
 // bcrypt.hash("generic", 5, function (err, hash) {
 //     console.log("1: ",hash);

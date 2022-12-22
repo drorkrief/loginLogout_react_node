@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import "./App.css";
 import Login from "./Components/Login";
-import { Routes, Route, Outlet, Link } from "react-router-dom";
+import { Routes, Route, Outlet, Link, useSearchParams  } from "react-router-dom";
 import SignUp from "./Components/SignUp";
 import Home from "./Components/Home";
 import ErrorPath from "./Components/ErrorPath";
 import About from "./Components/About";
+import MailVerification from "./Components/MailVerification";
 
 function App() {
+  const [searchParams, setSearchParams] = useSearchParams();
   // const [login, setLogin] = useState();
+  let urlparams = searchParams.entries()
+  console.log("searchParams.get(code)",urlparams);
+  
   return (
     <div className="App">
       {" "}
@@ -39,7 +44,9 @@ function App() {
         <Route path="signup" element={<SignUp />} />
         <Route path="login" element={<Login />} />
         <Route path="about" element={<About />} />
+        <Route path="verification" element={<MailVerification test="123123123" code={searchParams.get("code")} />} />
         <Route path="*" element={<ErrorPath />} />
+
       </Routes>
       
     </div>
