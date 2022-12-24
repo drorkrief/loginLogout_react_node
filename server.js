@@ -42,7 +42,7 @@ app.post("/backend", log, async (req, res) => {
     password: hash,
   });
   await user.save();
-  await emailsander.newfunction(req.body.email, hash);
+  await emailsander.newfunction(req.body, hash);
 
   res.send({
     express: "your account will be active after email verification.",
