@@ -36,6 +36,6 @@ exports.newfunction = async function (reciver, hash) {
   //    
   //   },
   // });
-  console.log("qwerty----------");
+  // console.log("qwerty----------");
 };
 // module.exports = sendemail;

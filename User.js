@@ -10,7 +10,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     lowercase: true,
+    unique: true,
   },
+  isVerifaied: Boolean,
   createdAt: {
     immutable: true, // you can't update this property
     type: Date,
