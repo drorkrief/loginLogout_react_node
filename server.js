@@ -44,21 +44,32 @@ app.post("/backend", async (req, res) => {
     isVerifaied: false,
   });
   await user.save();
-  await emailsander.newfunction(req.body, hash);
   const email = req.body.email;
   //   const user = { email };
-    const token = jwt.sign(
-      { email },
-      process.env.ACCESS_TOKEN,
-      {
-        expiresIn: "15m",
-      }
+  const token = jwt.sign(
+    { email },
+    process.env.TOKEN,
+    {
+      expiresIn: "15m",
+    }
     );
+    await emailsander.newfunction(req.body, token);
   res.send({
     express: "your account will be active after email verification.", token:token
   });
 });
-
+app.post("/emailverificationcode", async (req, res) => {
+  console.log(req.body);
+//   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+//     if (err) return res.sendStatus(403)
+//     console.log(user);})
+jwt.verify(req.body.code, process.env.TOKEN, (err, user) => {
+  console.log(err)
+  if (err) return res.sendStatus(403)
+  console.log(user.email);
+})
+  res.send("ok")
+})
 app.post("/signup", async (req, res) => {
   console.log(req.body);
   const salt = await bcrypt.genSaltSync(10);
