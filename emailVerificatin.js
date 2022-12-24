@@ -11,10 +11,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 exports.newfunction = async function (reciver, hash) {
-    const htmlContent = `Here is a reset token.<p>click here: <a href="http://localhost:3000/login?code=${hash}">link</a>`
+    const htmlContent = `Here is a reset token.<div>click here: <a href="http://localhost:3000/verification?code=${hash}">link</a><p>name: ${reciver.name}, email: ${reciver.email}</p></div>`
   const options = {
     from: process.env.EMAIL,
-    to: reciver,
+    to: reciver.email,
     subject: "Reset password",
     html: htmlContent,
   };
