@@ -7,6 +7,7 @@ const User = require("./User");
 require("dotenv").config();
 const log = require("./Modules/WrireToDB");
 const port = process.env.PORT || 3033;
+const jwt = require("jsonwebtoken");
 app.use(express.json());
 const path = require("path");
 const validator = require("email-validator");
@@ -20,7 +21,7 @@ mongoose.connect(
   (e) => console.error(e)
 );
 
-app.post("/backend", log, async (req, res) => {
+app.post("/backend", async (req, res) => {
   console.log(req.body);
   // emailsander.transporter()
   console.log(
@@ -38,14 +39,23 @@ app.post("/backend", log, async (req, res) => {
   const hash = await bcrypt.hashSync(req.body.password, salt);
   const user = await User.create({
     name: req.body.name,
-    email: req.body.email,
+    email: req.body.email.toLowerCase(),
     password: hash,
+    isVerifaied: false,
   });
   await user.save();
   await emailsander.newfunction(req.body, hash);
-
+  const email = req.body.email;
+  //   const user = { email };
+    const token = jwt.sign(
+      { email },
+      process.env.ACCESS_TOKEN,
+      {
+        expiresIn: "15m",
+      }
+    );
   res.send({
-    express: "your account will be active after email verification.",
+    express: "your account will be active after email verification.", token:token
   });
 });
 
