@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import Login from "./Components/Login";
-import { Routes, Route, Outlet, Link, useSearchParams  } from "react-router-dom";
+import { Routes, Route, Link, useSearchParams  } from "react-router-dom";
 import SignUp from "./Components/SignUp";
 import Home from "./Components/Home";
 import ErrorPath from "./Components/ErrorPath";

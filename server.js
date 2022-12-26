@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const User = require("./User");
 require("dotenv").config();
 const log = require("./Modules/WrireToDB");
+const userToFind = require("./Modules/UserExist");
 const port = process.env.PORT || 3033;
 const jwt = require("jsonwebtoken");
 app.use(express.json());
@@ -22,19 +23,16 @@ mongoose.connect(
 );
 
 app.post("/backend", async (req, res) => {
-  console.log(req.body);
-  // emailsander.transporter()
-  console.log(
-    `is ${req.body.email} valide? `,
-    validator.validate(req.body.email)
-  );
+  // console.log("req.body => ", req.body); 
+
   if (
-    !validator.validate(req.body.email) ||
+    !validator.validate(req.body.email) || // check the values.
     req.body.name.length < 3 ||
     req.body.password.length < 6
   ) {
-    res.status(404).send("Not found");
+    return res.status(404).send("Not found");
   }
+
   const salt = await bcrypt.genSaltSync(10);
   const hash = await bcrypt.hashSync(req.body.password, salt);
   const user = await User.create({
@@ -43,33 +41,32 @@ app.post("/backend", async (req, res) => {
     password: hash,
     isVerifaied: false,
   });
-  await user.save();
+  await user.save(function (err) {
+    console.log(err);
+  });
   const email = req.body.email;
-  //   const user = { email };
-  const token = jwt.sign(
-    { email },
-    process.env.TOKEN,
-    {
-      expiresIn: "15m",
-    }
-    );
-    await emailsander.newfunction(req.body, token);
+  const token = await jwt.sign({ email }, process.env.TOKEN, {
+    expiresIn: "15m",
+  });
+  await emailsander.newfunction(req.body, token);
   res.send({
-    express: "your account will be active after email verification.", token:token
+    express: "your account will be active after email verification.",
+    token: token,
   });
 });
+
 app.post("/emailverificationcode", async (req, res) => {
   console.log(req.body);
-//   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-//     if (err) return res.sendStatus(403)
-//     console.log(user);})
-jwt.verify(req.body.code, process.env.TOKEN, (err, user) => {
-  console.log(err)
-  if (err) return res.sendStatus(403)
-  console.log(user.email);
-})
-  res.send("ok")
-})
+  //   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+  //     if (err) return res.sendStatus(403)
+  //     console.log(user);})
+  jwt.verify(req.body.code, process.env.TOKEN, (err, user) => {
+    console.log(err);
+    if (err) return res.sendStatus(403);
+    console.log(user.email);
+  });
+  res.send("ok");
+});
 app.post("/signup", async (req, res) => {
   console.log(req.body);
   const salt = await bcrypt.genSaltSync(10);

@@ -21,7 +21,7 @@ exports.newfunction = async function (reciver, hash) {
 
   transporter.sendMail(options, (error, info) => {
     if (error) console.log(error);
-    else console.log(info);
+    else console.log("email status : ",info.accepted);
   });
   // var transporter = nodemailer.createTransport("SMTP",{
   //   host: "smtp-mail.outlook.com", // hostname
