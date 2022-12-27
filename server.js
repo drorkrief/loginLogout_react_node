@@ -5,13 +5,12 @@ const fs = require("fs");
 const mongoose = require("mongoose");
 const User = require("./User");
 require("dotenv").config();
-const log = require("./Modules/WrireToDB");
+const valuesTesting = require("./Modules/CheckTheValues");
 const userToFind = require("./Modules/UserExist");
 const port = process.env.PORT || 3033;
 const jwt = require("jsonwebtoken");
 app.use(express.json());
 const path = require("path");
-const validator = require("email-validator");
 const emailsander = require("./emailVerificatin");
 mongoose.set("strictQuery", true);
 mongoose.connect(
@@ -22,16 +21,8 @@ mongoose.connect(
   (e) => console.error(e)
 );
 
-app.post("/backend", async (req, res) => {
+app.post("/backend",valuesTesting, async (req, res) => {
   // console.log("req.body => ", req.body); 
-
-  if (
-    !validator.validate(req.body.email) || // check the values.
-    req.body.name.length < 3 ||
-    req.body.password.length < 6
-  ) {
-    return res.status(404).send("Not found");
-  }
 
   const salt = await bcrypt.genSaltSync(10);
   const hash = await bcrypt.hashSync(req.body.password, salt);
@@ -41,9 +32,7 @@ app.post("/backend", async (req, res) => {
     password: hash,
     isVerifaied: false,
   });
-  await user.save(function (err) {
-    console.log(err);
-  });
+   user.save();
   const email = req.body.email;
   const token = await jwt.sign({ email }, process.env.TOKEN, {
     expiresIn: "15m",
