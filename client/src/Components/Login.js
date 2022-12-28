@@ -11,7 +11,7 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post("/backend", {
+      .post("/register", {
         name: nameRef.current?.value,
         email: emailRef.current?.value,
         password: passwordRef.current?.value,

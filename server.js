@@ -21,8 +21,8 @@ mongoose.connect(
   (e) => console.error(e)
 );
 
-app.post("/backend",valuesTesting, async (req, res) => {
-  // console.log("req.body => ", req.body); 
+app.post("/register", valuesTesting, async (req, res) => {
+  // console.log("req.body => ", req.body);
 
   const salt = await bcrypt.genSaltSync(10);
   const hash = await bcrypt.hashSync(req.body.password, salt);
@@ -32,7 +32,7 @@ app.post("/backend",valuesTesting, async (req, res) => {
     password: hash,
     isVerifaied: false,
   });
-   user.save();
+  user.save();
   const email = req.body.email;
   const token = await jwt.sign({ email }, process.env.TOKEN, {
     expiresIn: "15m",
@@ -45,17 +45,31 @@ app.post("/backend",valuesTesting, async (req, res) => {
 });
 
 app.post("/emailverificationcode", async (req, res) => {
-  console.log(req.body);
-  //   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-  //     if (err) return res.sendStatus(403)
-  //     console.log(user);})
-  jwt.verify(req.body.code, process.env.TOKEN, (err, user) => {
-    console.log(err);
-    if (err) return res.sendStatus(403);
-    console.log(user.email);
-  });
-  res.send("ok");
+  // check the jwt
+  try {
+    await jwt.verify(req.body.code, process.env.TOKEN, (err, user) => {
+      console.log("jwt error : ",err);
+      if (err) {
+        return res
+          .status(403)
+          .send({ message: "not recognized as a valid token" });
+      }
+      req.userEmail = user.email;
+    });
+  } catch (error) {
+    console.log("jwt - try catch error : ",error);
+  }
+  console.log("userEmail from jwt : ", req.userEmail);
+  const filter = { email: req.userEmail };
+  const update = { isVerifaied: true };
+  let updatedItem = await User.findOneAndUpdate(filter, update);
+  console.log("updatedItem : ",updatedItem);
+  if (!updatedItem) {
+  return res.status(500).send("we are bad");
+  }
+  return res.status(200).send("we are good");
 });
+
 app.post("/signup", async (req, res) => {
   console.log(req.body);
   const salt = await bcrypt.genSaltSync(10);
