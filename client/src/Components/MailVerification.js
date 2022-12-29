@@ -1,13 +1,36 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function MailVerification(props) {
+  const [isValid, setIsValid] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
-    props?.code && axios.post("/emailverificationcode", { code: props.code });
+    props?.code &&
+      axios
+        .post("/emailverificationcode", { code: props.code })
+        .then(function (response) {
+          console.log(response);
+          if (response.status === 200) {
+            navigate("/");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
   }, []);
 
   const sendCode = () => {
-    axios.post("/emailverificationcode", { code: props.code });
+    axios
+      .post("/emailverificationcode", { code: props.code })
+      .then(function (response) {
+        console.log(response);
+        if (response.status === 200) {
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
   console.log(props);
   let params = new URLSearchParams();

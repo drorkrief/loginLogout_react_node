@@ -1,35 +1,41 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 
-function SignUp() {
-    const nameRef = useRef("");
-    const emailRef = useRef("");
-    const passwordRef = useRef("");
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        axios
-          .post("/register", {
-            name: nameRef.current?.value,
-            email: emailRef.current?.value,
-            password: passwordRef.current?.value,
-          })
-          .then(
-            (response) => {
-              console.log(response.data.express);
-            },
-            (error) => {
-              console.error(error);
-            }
-          );
-    
-        console.log("submited");
-      };
+function Register() {
+  const [data, setData] = useState();
+  const nameRef = useRef("");
+  const emailRef = useRef("");
+  const passwordRef = useRef("");
+  const formRef = useRef();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axios
+      .post("/register", {
+        name: nameRef.current?.value,
+        email: emailRef.current?.value,
+        password: passwordRef.current?.value,
+      })
+      .then(
+        (response) => {
+          console.log(response.data.express);
+          setData(response.data.express);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+
+    console.log("submited");
+    formRef.current.reset();
+  };
+
   return (
     <div>
-      
+      {" "}
       <header className="App-header">
-        <h1>SignUp page:</h1>
-        <form onSubmit={handleSubmit}>
+        <h1>Register page:</h1>
+        <form ref={formRef} onSubmit={handleSubmit}>
           <fieldset>
             <label>
               <span>name: </span>
@@ -60,12 +66,10 @@ function SignUp() {
           </fieldset>
           <button type={"submit"}>Submit</button>
         </form>
-
-        {/* <button onClick={getData}>get data from node</button>
-<p>{!data ? " " : data}</p> */}
       </header>
+      {data && <p>{data}</p>}
     </div>
   );
 }
 
-export default SignUp;
+export default Register;
