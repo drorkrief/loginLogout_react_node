@@ -88,17 +88,23 @@ app.get("/data", (req, res) => {
 });
 
 // console.log("path: -> ", fs.readFile( path.join( __dirname ,"/files/hashes.txt")));
-app.post("/login", async (req, res) => {
-  let currentHash = fs.readFileSync(path.join(__dirname, "/files/hashes.txt"), {
-    encoding: "utf8",
-    flag: "r",
-  });
-  // await fs.readFile( path.join( __dirname ,"/files/hashes.txt"),'utf8', (err, data) => {
-  //   console.log("data : ",data);
-  //    currentHash =  data
-  // })
-  console.log(req.body.password, currentHash);
-  console.log(bcrypt.compareSync(req.body.password, currentHash));
+app.post("/login",userToFind, async (req, res) => {
+
+  // let currentHash = fs.readFileSync(path.join(__dirname, "/files/hashes.txt"), {
+  //   encoding: "utf8",
+  //   flag: "r",
+  // });
+  console.log("req body => ",req.body);
+  console.log("password endrypted from DB => ",req.DBpassword);
+
+  // console.log(req.body.password, currentHash);
+  console.log(bcrypt.compareSync(req.body.password, req.DBpassword));
+  if (bcrypt.compareSync(req.body.password, req.DBpassword)) {
+    return res.status(200).send("good login")
+  } else{
+    return res.status(401).send("bad password")
+
+  }
   res.send("Hello World!");
 });
 
