@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.css";
-import Login from "./Components/Login";
+import Register from "./components/Register";
 import { Routes, Route, Link, useSearchParams  } from "react-router-dom";
-import SignUp from "./Components/SignUp";
-import Home from "./Components/Home";
-import ErrorPath from "./Components/ErrorPath";
-import About from "./Components/About";
-import MailVerification from "./Components/MailVerification";
+import LogIn from "./components/LogIn";
+import Home from "./components/Home";
+import ErrorPath from "./components/ErrorPath";
+import About from "./components/About";
+import MailVerification from "./components/MailVerification";
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,10 +26,10 @@ function App() {
             <Link to="/about">About</Link>
           </li>
           <li>
-            <Link to="/signup">signup</Link>
+            <Link to="/logIn">LogIn</Link>
           </li>
           <li>
-            <Link to="/login">login</Link>
+            <Link to="/register">register</Link>
           </li>
         </ul>
       </nav>
@@ -41,8 +41,8 @@ function App() {
       {/* {!login ? null : login === "Login" ? <Login /> : <SignUp />} */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="signup" element={<SignUp />} />
-        <Route path="login" element={<Login />} />
+        <Route path="logIn" element={<LogIn />} />
+        <Route path="register" element={<Register />} />
         <Route path="about" element={<About />} />
         <Route path="verification" element={<MailVerification test="123123123" code={searchParams.get("code")} />} />
         <Route path="*" element={<ErrorPath />} />
