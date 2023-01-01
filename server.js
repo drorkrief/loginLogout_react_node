@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const express = require("express");
 const app = express();
-// const nodemailer = require("nodemailer");
 const fs = require("fs");
 const mongoose = require("mongoose");
 const User = require("./User");
@@ -22,52 +21,23 @@ mongoose.connect(
   (e) => console.error(e)
 );
 
-<<<<<<< HEAD
 app.post("/register", valuesTesting, async (req, res) => {
   // console.log("req.body => ", req.body);
-=======
-// const transporter = nodemailer.createTransport({
-//   service: "hotmail",
-//   auth: {
-//     user: process.env.EMAIL,
-//     pass: process.env.EMAIL_PASS,
-//   },
-//   tls: {
-//     rejectUnauthorized: false,
-//   },
-// });
->>>>>>> 8b6da8a347dabc5ff150073d8eac6fb8324abc68
 
-app.post("/register", valuesTesting, async (req, res) => {
-  // encrypt the password
   const salt = await bcrypt.genSaltSync(10);
   const hash = await bcrypt.hashSync(req.body.password, salt);
-
-  // preper the user object before saving in DB
   const user = await User.create({
     name: req.body.name,
     email: req.body.email.toLowerCase(),
     password: hash,
     isVerifaied: false,
   });
-<<<<<<< HEAD
   user.save();
-=======
-
-  // save the user object in DB
-  user.save();
-
-  //  create jwt token
->>>>>>> 8b6da8a347dabc5ff150073d8eac6fb8324abc68
   const email = req.body.email;
   const token = await jwt.sign({ email }, process.env.TOKEN, {
     expiresIn: "15m",
   });
-
-  // call the email verification module for danding a verificaton email
   await emailsander.newfunction(req.body, token);
-
-  // send a good response
   res.send({
     express: "your account will be active after email verification.",
     token: token,
@@ -99,7 +69,6 @@ app.post("/emailverificationcode", async (req, res) => {
   }
   return res.status(200).send("we are good");
 });
-<<<<<<< HEAD
 
 app.post("/signup", async (req, res) => {
   console.log(req.body);
@@ -113,23 +82,9 @@ app.post("/signup", async (req, res) => {
   });
   res.send("Hello World! " + salt + " " + hash);
 });
-=======
-// app.post("/signup", async (req, res) => {
-//   console.log(req.body);
-//   const salt = await bcrypt.genSaltSync(10);
-//   const hash = await bcrypt.hashSync(req.body.password, salt);
-//   console.log(salt, hash, "see above");
-//   fs.writeFile(path.join(__dirname, "/files/hashes.txt"), hash, (err) => {
-//     if (err) {
-//       console.error(err);
-//     }
-//   });
-//   res.send("Hello World! " + salt + " " + hash);
-// });
->>>>>>> 8b6da8a347dabc5ff150073d8eac6fb8324abc68
 
 app.get("/data", (req, res) => {
-  res.send({ data: "Hello World!" }); // 123
+  res.send({ data: "Hello World!" });
 });
 
 // console.log("path: -> ", fs.readFile( path.join( __dirname ,"/files/hashes.txt")));
