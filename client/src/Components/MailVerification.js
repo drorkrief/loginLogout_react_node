@@ -12,6 +12,9 @@ function MailVerification(props) {
         .then(function (response) {
           console.log(response);
           if (response.status === 200) {
+            console.log("cccccccccccccccccccccc",response.data);
+            localStorage.setItem("user", JSON.stringify( response.data) )
+            localStorage.setItem("auth", JSON.stringify( {auth:props.code}) )
             navigate("/");
           }
         })

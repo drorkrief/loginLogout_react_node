@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import Register from "./components/Register";
 import { Routes, Route, Link, useSearchParams  } from "react-router-dom";
-import LogIn from "./components/LogIn";
+import LogIn from "./components/Login";
 import Home from "./components/Home";
 import ErrorPath from "./components/ErrorPath";
 import About from "./components/About";

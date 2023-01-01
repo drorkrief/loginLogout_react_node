@@ -67,7 +67,7 @@ app.post("/emailverificationcode", async (req, res) => {
   if (!updatedItem) {
   return res.status(500).send("we are bad");
   }
-  return res.status(200).send("we are good");
+  return res.status(200).send({name:updatedItem.name, email:updatedItem.email});
 });
 
 app.post("/signup", async (req, res) => {
